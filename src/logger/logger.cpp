@@ -118,18 +118,28 @@ std::string make_prefix(LogLevel level,
                         int line) {
     std::string prefix;
     if (!tag.empty()) {
-        prefix += fmt::format("[{}]", tag);
+        prefix += "[";
+        prefix += tag;
+        prefix += "]";
     }
 
-    prefix += fmt::format("[{}]", level_to_string(level));
+    prefix += "[";
+    prefix += level_to_string(level);
+    prefix += "]";
 
     if (timestamp_enabled) {
-        prefix += fmt::format("[{}]", current_timestamp());
+        prefix += "[";
+        prefix += current_timestamp();
+        prefix += "]";
     }
 
     const char* name = base_name(file);
     if (name && line > 0) {
-        prefix += fmt::format("[{}:{}]", name, line);
+        prefix += "[";
+        prefix += name;
+        prefix += ":";
+        prefix += std::to_string(line);
+        prefix += "]";
     }
 
     return prefix;

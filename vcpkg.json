@@ -1,8 +1,7 @@
 {
-  "name": "template-app-simulator-on-windows",
+  "name": "status-deck-simulator-on-windows",
   "version": "1.0.0",
   "dependencies": [
-    "fmt",
     "libpng",
     "libjpeg-turbo",
     "zlib",
@@ -10,10 +9,6 @@
     "freetype"
   ],
   "overrides": [
-    {
-      "name": "fmt",
-      "version": "10.1.1"
-    },
     {
       "name": "libpng",
       "version": "1.6.48"

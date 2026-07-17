@@ -50,7 +50,7 @@ lv_display_t* init_display() {
         return nullptr;
     }
 
-    lv_sdl_window_set_title(display, "Template App");
+    lv_sdl_window_set_title(display, "HarrisonTest");
     lv_sdl_window_set_resizeable(display, false);
     lv_sdl_mouse_create();
     lv_sdl_mousewheel_create();
@@ -90,7 +90,7 @@ lv_display_t* init_display() {
 
 int Application::run() {
     logger::Logger::init();
-    logger::Logger::set_tag("template");
+    logger::Logger::set_tag("harrisontest");
 
     lv_init();
 

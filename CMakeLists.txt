@@ -6,7 +6,7 @@
 
 cmake_minimum_required(VERSION 3.31)
 
-project(template_app VERSION 0.0.1 LANGUAGES C CXX)
+project(harrison_test VERSION 0.0.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -38,6 +38,20 @@ include(FetchContent)
 set(CONFIG_LV_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(CONFIG_LV_BUILD_DEMOS    OFF CACHE BOOL "" FORCE)
 set(LV_BUILD_CONF_PATH "${PROJECT_SOURCE_DIR}/src/config/lv_conf.h" CACHE PATH "" FORCE)
+
+if(NOT FETCHCONTENT_SOURCE_DIR_LVGL)
+    foreach(LVGL_SOURCE_HINT IN ITEMS
+            "${CMAKE_CURRENT_SOURCE_DIR}/.cache/cp0-deps/lvgl-src"
+            "${CMAKE_CURRENT_SOURCE_DIR}/.cache/darwin-arm64-deps/lvgl-src"
+            "${CMAKE_CURRENT_SOURCE_DIR}/.cache/darwin-x86_64-deps/lvgl-src"
+            "${CMAKE_CURRENT_SOURCE_DIR}/.cache/linux-x86_64-deps/lvgl-src")
+        if(EXISTS "${LVGL_SOURCE_HINT}/CMakeLists.txt")
+            set(FETCHCONTENT_SOURCE_DIR_LVGL "${LVGL_SOURCE_HINT}"
+                CACHE PATH "Local LVGL source override")
+            break()
+        endif()
+    endforeach()
+endif()
 
 # Manually download LVGL dependencies
 FetchContent_Declare(
@@ -93,11 +107,6 @@ if(USE_DESKTOP)
     # SDL2
     # =========================
     find_package(SDL2 CONFIG REQUIRED)
-
-    # =========================
-    # fmt
-    # =========================
-    find_package(fmt CONFIG REQUIRED)
 
     # =========================
     # ZLIB
@@ -283,37 +292,6 @@ else()
         endif()
     endforeach()
     list(REMOVE_DUPLICATES CM0_MULTIARCH_INCLUDE_DIRS)
-
-    cm0_find_header(FMT_INCLUDE_DIR fmt/format.h
-        "${CM0_SYSROOT}/usr/include"
-    )
-    cm0_find_library(FMT_LIBRARY fmt libfmt.so.10 libfmt.so.10.1.0)
-    if(FMT_INCLUDE_DIR AND FMT_LIBRARY)
-        cm0_add_imported_library(fmt::fmt "${FMT_LIBRARY}" "${FMT_INCLUDE_DIR}")
-    elseif(CM0_ALLOW_FETCH_DEPS)
-        message(STATUS "Missing fmt in BSP sysroot, fetching from GitHub because CM0_ALLOW_FETCH_DEPS=ON")
-        FetchContent_Declare(
-            fmt
-            GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-            GIT_TAG        10.1.1
-            GIT_SHALLOW    TRUE
-        )
-        set(FMT_INSTALL OFF CACHE BOOL "Disable fmt install rules for app packages" FORCE)
-        set(FMT_TEST OFF CACHE BOOL "Disable fmt tests" FORCE)
-        set(FMT_DOC OFF CACHE BOOL "Disable fmt docs" FORCE)
-        FetchContent_MakeAvailable(fmt)
-        if(TARGET fmt)
-            target_include_directories(fmt SYSTEM BEFORE PRIVATE ${CM0_MULTIARCH_INCLUDE_DIRS})
-        endif()
-        if(TARGET fmt AND NOT TARGET fmt::fmt)
-            add_library(fmt::fmt ALIAS fmt)
-        endif()
-    else()
-        message(FATAL_ERROR
-            "Missing fmt header/library in BSP sysroot: ${CM0_SYSROOT}\n"
-            "Install/copy fmt into the BSP, or reconfigure with -DCM0_ALLOW_FETCH_DEPS=ON."
-        )
-    endif()
 
     set_target_properties(CM0::PNG PROPERTIES INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
     set_target_properties(CM0::Freetype PROPERTIES INTERFACE_LINK_LIBRARIES "CM0::PNG;ZLIB::ZLIB")
@@ -527,7 +505,7 @@ target_link_libraries(${PROJECT_NAME}_viewmodel
 # - UI screen management
 # - UI asset management
 # - Reactive framework based on lvgl observer mode
-# - Logger based on fmt
+# - Project logger
 # ====================================================
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/app/*.c"
@@ -549,8 +527,6 @@ target_include_directories(logger PUBLIC
 )
 
 target_link_libraries(logger
-    PUBLIC
-        fmt::fmt
     PRIVATE
         ${PLATFORM_LIBS}
 )

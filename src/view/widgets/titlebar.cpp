@@ -29,8 +29,14 @@ void TitleBar::build() {
     auto* title = lv_label_create(core_obj_);
     lv_label_bind_text(title, view_model_.title_subject(), nullptr);
     lv_obj_set_style_text_font(title, &lv_font_montserrat_14, 0);
-    lv_obj_align(title, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(title, LV_ALIGN_LEFT_MID, 10, 0);
     reactive::bind_theme(title, view_model_.dark_mode_subject(), reactive::ThemeRole::Text);
+
+    auto* status = lv_label_create(core_obj_);
+    lv_label_set_text(status, "09:41 88%");
+    lv_obj_set_style_text_font(status, &lv_font_montserrat_12, 0);
+    lv_obj_align(status, LV_ALIGN_RIGHT_MID, -10, 0);
+    reactive::bind_theme(status, view_model_.dark_mode_subject(), reactive::ThemeRole::Text);
 }
 
 } // namespace view::widgets

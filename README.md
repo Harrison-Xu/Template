@@ -65,7 +65,7 @@ Common CMake cache options:
 | Option | Default | Description |
 | --- | --- | --- |
 | `USE_DESKTOP` | `ON` | Build SDL desktop simulator when `ON`; build embedded Linux target when `OFF`. |
-| `APP_NAME` | `template_app` | Application name used by installed asset lookup. |
+| `APP_NAME` | `harrison_test` | Application name used by installed asset lookup. |
 | `APP_ASSETS_ROOT` | empty | Optional runtime asset root. Expected layout includes `fonts/`, `images/`, etc. |
 | `APP_KEY_INPUT_DEVICE` | empty | Optional Linux evdev device path, e.g. `/dev/input/event0`. Empty means auto-scan `/dev/input/event*`. |
 | `APP_FRAMEBUFFER_DEVICE` | `/dev/fb0` | Linux framebuffer device used by embedded builds when `APP_USE_DRM=OFF`. |
@@ -94,7 +94,6 @@ Current dependencies info:
 | Dependency | Version | Source | Notes |
 | --- | --- | --- | --- |
 | LVGL | `v9.5.0` | `CMakeLists.txt` FetchContent | Main GUI framework. |
-| fmt | `12.1.0` | System package manager or `vcpkg.json` override | Logging and formatted strings. |
 | libpng | `1.6.48` | System package manager or `vcpkg.json` override | PNG image decoding support for LVGL. |
 | libjpeg-turbo | `3.1.3` | System package manager or `vcpkg.json` override | JPEG image decoding support for LVGL. |
 | zlib | `1.3.1` | System package manager or `vcpkg.json` override | Compression dependency used by image libraries. |
@@ -115,7 +114,6 @@ sudo apt install -y \
   ninja-build \
   libpng-dev \
   libjpeg-dev \
-  libfmt-dev \
   libsdl2-dev \
   libfreetype-dev \
   zlib1g-dev
@@ -143,9 +141,9 @@ cmake --build --preset linux-x86-64-dbg
 Run:
 
 ```shell
-./build/linux-x86-64/Debug/template_app
+./build/linux-x86-64/Debug/harrison_test
 # or launch release build
-# ./build/linux-x86-64/Release/template_app
+# ./build/linux-x86-64/Release/harrison_test
 ```
 
 ### macOS Desktop
@@ -164,7 +162,6 @@ brew install \
   ninja \
   libpng \
   jpeg \
-  fmt \
   sdl2 \
   freetype \
   dpkg \
@@ -188,9 +185,9 @@ cmake --build --preset darwin-arm64-dbg
 Run:
 
 ```shell
-./build/darwin-arm64/Debug/template_app
+./build/darwin-arm64/Debug/harrison_test
 # or launch release build
-# ./build/darwin-arm64/Release/template_app
+# ./build/darwin-arm64/Release/harrison_test
 ```
 
 For Intel macOS, use the `darwin-x86-64` configure preset and matching build preset:
@@ -200,9 +197,9 @@ cmake --preset darwin-x86-64
 cmake --build --preset darwin-x86-64-dbg
 # alternatively, you can run release build
 # cmake --build --preset darwin-x86-64-rel
-./build/darwin-x86-64/Debug/template_app
+./build/darwin-x86-64/Debug/harrison_test
 # or launch release build
-# ./build/darwin-x86-64/Release/template_app
+# ./build/darwin-x86-64/Release/harrison_test
 ```
 
 ### Windows Desktop
@@ -268,11 +265,11 @@ Configure and build with MSVC:
 ```powershell
 cmake --preset win32-msvc
 cmake --build --preset win32-msvc-dbg
-.\build\msvc\Debug\template_app.exe
+.\build\msvc\Debug\harrison_test.exe
 
 # alternatively for release build
 # cmake --build --preset win32-msvc-rel
-# .\build\msvc\Release\template_app.exe
+# .\build\msvc\Release\harrison_test.exe
 ```
 
 Configure and build with MinGW-w64:
@@ -297,11 +294,11 @@ Configure and build with MinGW-w64:
 ```powershell
 cmake --preset win32-mingw64
 cmake --build --preset win32-mingw64-dbg
-.\build\mingw64\Debug\template_app.exe
+.\build\mingw64\Debug\harrison_test.exe
 
 # alternatively for release build
 # cmake --build --preset win32-mingw64-rel
-#.\build\mingw64\Release\template_app.exe
+#.\build\mingw64\Release\harrison_test.exe
 ```
 > [!NOTE]
 > `VCPKG` will handle the dependencies during CMake configuration process automatically, 
@@ -355,7 +352,7 @@ By default, the debian package is copied to '$HOME' folder, normally it's under 
 On your device, install the copied package with `apt` and replace the package file name with the one you copied:
 
 ```shell
-sudo apt install --no-install-recommends ./TemplateApp_0.0.1_m5stack1_arm64.deb
+sudo apt install --no-install-recommends ./HarrisonTest_0.0.1_m5stack_arm64.deb
 ```
 
 
@@ -415,25 +412,25 @@ cmake --preset darwin-arm64 -DAPP_ASSETS_ROOT=/path/to/assets
 Debian packages are produced with CPack and written to `dist/`. The package file name follows:
 
 ```text
-<AppName>_<Version>_m5stack1_arm64.deb
+<AppName>_<Version>_m5stack_arm64.deb
 ```
 
 Default example:
 
 ```text
-dist/TemplateApp_0.0.1_m5stack1_arm64.deb
+dist/HarrisonTest_0.0.1_m5stack_arm64.deb
 ```
 
 Package layout:
 
 | Path | Content |
 | --- | --- |
-| `/usr/bin/template_app` | Application executable. |
-| `/usr/share/template_app/` | Runtime assets: fonts, images, audio. |
-| `/usr/share/APPLaunch/applications/template_app.desktop` | APPLaunch launcher entry. |
-| `/usr/share/APPLaunch/share/images/template*.png` | APPLaunch launcher icons/fallbacks. |
-| `/usr/lib/systemd/system/template_app.service` | Optional systemd service for embedded autostart. |
-| `/usr/share/doc/template_app/` | README and third-party asset license notes. |
+| `/usr/bin/harrison_test` | Application executable. |
+| `/usr/share/harrison_test/` | Runtime assets: fonts, images, audio. |
+| `/usr/share/APPLaunch/applications/harrison_test.desktop` | APPLaunch launcher entry. |
+| `/usr/share/APPLaunch/share/images/harrison_test*.png` | APPLaunch launcher icons/fallbacks. |
+| `/usr/lib/systemd/system/harrison_test.service` | Optional systemd service for embedded autostart. |
+| `/usr/share/doc/harrison_test/` | README and third-party asset license notes. |
 
 Build and package:
 
